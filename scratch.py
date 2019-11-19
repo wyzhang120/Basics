@@ -32,7 +32,7 @@ class ricker_fft2:
         ricker_f = ricker_f * np.exp(-1j * 2 * np.pi * f * delay)
 
         # time domain ricker
-        ricker_t = np.real(1./N * np.fft.ifft(ricker_f))
+        ricker_t = N * np.real(np.fft.ifft(ricker_f))
 
 
         amp = np.absolute(ricker_f)
@@ -78,5 +78,5 @@ class ricker_fft2:
 
 
 fc = 50.
-rk3 = ricker_fft2(N=256, fc=fc, tmax=1., delay = 1.5/fc)
+rk3 = ricker_fft2(N=256, fc=fc, tmax=1., delay=1.5/fc)
 rk3.plot_ricker()
