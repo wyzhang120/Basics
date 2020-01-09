@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.sparse as sparse
-from scipy.sparse.linalg import inv, spsolve
+from scipy.sparse.linalg import inv, spsolve, lsqr
 import matplotlib.pyplot as plt
 import h5py
 
@@ -100,9 +100,10 @@ for isrc in range(nsrc):
 G = sparse.csr_matrix(raymat)
 GTG = G.T.dot(G)
 R = sparse.diags(1./GTG.diagonal())
-op = R.dot(GTG) + par['damping'] * sparse.eye(G.shape[1])
 rhs = R.dot(G.T).dot(tt)
+op = R.dot(GTG) + par['damping'] * sparse.eye(G.shape[1])
 slowness = spsolve(op, rhs)
+# slowness = lsqr(R.dot(GTG), rhs, damp=par['damping'])[0]
 vp_inv = 1./slowness.reshape([par['nx'], par['nz']])
 vp_inv = np.clip(vp_inv, par['vp_min'], par['vp_max'])
 fig, ax = plt.subplots()
